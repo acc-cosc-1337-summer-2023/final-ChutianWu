@@ -2,6 +2,7 @@
 #include "catch.hpp"
 #include "die.h"
 #include "roll.h"
+#include "shooter.h"
 
 TEST_CASE("Verify Test Configuration", "verification") {
 	REQUIRE(true == true);
@@ -58,3 +59,21 @@ TEST_CASE("Verify roll 10 times and assert each roll returns a value is from 2 t
 		REQUIRE(result <= 12);    
 	}
 }
+
+TEST_CASE("Verify Shooter returns a Roll and the roll result has one of the following values: 2-12, loop 10 times")
+{
+    Die s_die1, s_die2; 
+    Shooter shooter_test;
+
+    for (int i = 0; i < 10; i++)
+    {
+       	auto roll = shooter_test.throw_die(s_die1, s_die2);
+		int result = roll->roll_value();
+        REQUIRE(result >= 2);
+        REQUIRE(result <= 12);
+    }
+}
+
+
+
+
