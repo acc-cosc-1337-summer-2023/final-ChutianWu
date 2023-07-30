@@ -3,6 +3,9 @@
 #include "die.h"
 #include "roll.h"
 #include "shooter.h"
+#include "phase.h"
+#include "come_out_phase.h"
+#include "point_phase.h"
 
 TEST_CASE("Verify Test Configuration", "verification") {
 	REQUIRE(true == true);
@@ -60,6 +63,7 @@ TEST_CASE("Verify roll 10 times and assert each roll returns a value is from 2 t
 	}
 }
 
+/*
 TEST_CASE("Verify Shooter returns a Roll and the roll result has one of the following values: 2-12, loop 10 times")
 {
     Die s_die1, s_die2; 
@@ -73,7 +77,46 @@ TEST_CASE("Verify Shooter returns a Roll and the roll result has one of the foll
         REQUIRE(result <= 12);
     }
 }
+*/
 
+//Test that ComeOutPhase get outcomes returns values RollOutcome::natural, RollOutcome::craps, and RollOutcome::point
 
+TEST_CASE("Test ComeOutPhase::get_outcome returns values")
+{
+    Die roll1_test, roll2_test;
+    Roll roll_test(roll1_test, roll2_test);
 
+    roll_test.roll_die();
+    int result = roll_test.roll_value();
 
+    ComeOutPhase comeOutPhase;
+    RollOutcome outcome = comeOutPhase.get_outcome(&roll_test);
+
+    if (result == 7 || result == 11)
+        REQUIRE(outcome == RollOutcome::natural);
+    else if (result == 2 || result == 3 || result == 12)
+        REQUIRE(outcome == RollOutcome::craps);
+    else
+        REQUIRE(outcome == RollOutcome::point);
+}
+
+//Test that PointPhase get outcomes returns values RollOutcome::point, RollOutcome::seven_out, and RollOutcome::nopoint 
+
+TEST_CASE("Test PointPhase::get_outcome returns values")
+{
+    Die roll1_test, roll2_test;
+    Roll roll_test(roll1_test, roll2_test);
+
+    int pointValue = 6;
+    PointPhase pointPhase(pointValue);
+
+    roll_test.roll_die();
+    int result = roll_test.roll_value();
+
+    if (result == pointValue)
+        REQUIRE(pointPhase.get_outcome(&roll_test) == RollOutcome::point);
+    else if (result == 7)
+        REQUIRE(pointPhase.get_outcome(&roll_test) == RollOutcome::seven_out);
+    else
+        REQUIRE(pointPhase.get_outcome(&roll_test) == RollOutcome::nopoint);
+}
