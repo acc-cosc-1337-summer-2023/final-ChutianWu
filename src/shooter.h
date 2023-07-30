@@ -17,12 +17,12 @@ using std::cout;
 class Shooter
 {
 public:
-    unique_ptr<Roll> throw_die(Die& die1, Die& die2);
+    Roll* throw_die(Die& die1, Die& die2);
     friend ostream& operator<<(ostream& os, const Shooter& shooter_ref);
-    ~Shooter(){};
+    ~Shooter();
 
 private:
-    vector<unique_ptr<Roll>> rolls;
+    vector<Roll*> rolls;
 };
 
 #endif
